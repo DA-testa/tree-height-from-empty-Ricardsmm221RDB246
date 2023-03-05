@@ -1,56 +1,50 @@
 ###Ricards Meiers-Meiris 1.grupa,221RDB246
 import sys
 import threading
-import numpy
 
 
-def compute_height(n, parents):
-    tree = {}
-    for node, parent in enumerate(parents):
+def calculate_height(n, parents):
+    children = [[] for _ in range(n)]
+    for i in range(n):
+        parent = parents[i]
         if parent == -1:
-            continue
-        if parent not in tree:
-            tree[parent] = [node]
+            root = i
         else:
-            tree[parent].append(node)
-    
-    
-    def height(node):   
-        if node not in tree:
+            children[parent].append(i)
+ 
+    def compute_depth(node):
+        if not children[node]:
             return 1
-        heights = [height(child) for child in tree[node]]
-        return max(heights) + 1
-   
-    root = parents.index(-1)
-    return height(root)
+        max_depth = 0
+        for child in children[node]:
+            depth = compute_depth(child)
+            max_depth = max(max_depth, depth)
+        return max_depth + 1
+
+    return compute_depth(root)
 
 
 def main():
-    source = input().strip().lower()
-    while source not in ['k', 'f']:
-        source = input().strip().lower()
-        if source == 'k':
-        n = int(input())
-    
-        parents = list(map(int, input().split()))
-    else:
-       
-        print("Enter the filename:")
-        filename = input().strip()
-        
-        if 'a' in filename:
-            print("Invalid filename. Please enter a filename that does not contain the letter 'a'.")
-            return
-        try: 
-            with open(f'folder/{filename}', 'r') as f:
-                n = int(f.readline().strip())
-                parents = list(map(int, f.readline().strip().split()))
-        except:
-            print("Error reading file. Please check the filename and try again.")
-            return
-    
-    print("Height of the tree:", compute_height(n, parents))
+    input_type = input()
 
-sys.setrecursionlimit(10**7)  
-threading.stack_size(2**27)   
-threading.Thread(target=main).start() 
+    if 'I' in input_type:
+        num_nodes = int(input())
+        node_parents = list(map(int, input().split()))
+        tree_height = calculate_height(num_nodes, node_parents)
+        print(tree_height)
+    elif 'F' in input_type:
+        file_name = input()
+        with open("test/" + file_name, 'r') as f:
+            num_nodes = int(f.readline())
+            node_parents = list(map(int, f.readline().split()))
+            tree_height = calculate_height(num_nodes, node_parents)
+            print(tree_height)
+    else:
+        print("invalid input")
+        exit()
+
+
+
+sys.setrecursionlimit(10**7) 
+threading.stack_size(2**27)  
+threading.Thread(target=main).start()
