@@ -26,16 +26,12 @@ def compute_height(n, parents):
 
 
 def main():
-    print("Do you want to enter input from keyboard or file? (k/f)")
     source = input().strip().lower()
     while source not in ['k', 'f']:
-        print("Invalid input. Please enter 'k' for keyboard input or 'f' for file input.")
         source = input().strip().lower()
         if source == 'k':
-            print("Enter the number of nodes:")
         n = int(input())
     
-        print("Enter the parents of nodes separated by spaces:")
         parents = list(map(int, input().split()))
     else:
        
